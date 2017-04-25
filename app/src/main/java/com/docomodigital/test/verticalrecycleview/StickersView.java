@@ -3,6 +3,7 @@ package com.docomodigital.test.verticalrecycleview;
 
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
@@ -53,6 +54,7 @@ public class StickersView extends android.support.v7.widget.AppCompatImageView {
 
     public void setSticker(Sticker st) {
         this.data = st;
+        setPosition(data.getFirstDrawable());
     }
 
     public AnimationDrawable getAnimationDrawable() {
@@ -72,20 +74,7 @@ public class StickersView extends android.support.v7.widget.AppCompatImageView {
             if (animationDrawable.isRunning()) {
                 Log.w(getClass().getSimpleName(), "startAnimation: skipped because already running.");
             } else {
-                int actualWidth = getSticker().getWidth();
-                int actualHeight = getSticker().getHeight();
-
-                setScaleType(ScaleType.FIT_XY);
-                setImageDrawable(animationDrawable);
-
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)getLayoutParams();
-                layoutParams.width = actualWidth;
-                layoutParams.height = actualHeight;
-                layoutParams.leftMargin = getSticker().getX();
-                layoutParams.topMargin = getSticker().getY();
-
-                Log.d("StickerView:", "anim width: " + layoutParams.width + " height: " + layoutParams.height);
-                setLayoutParams(layoutParams);
+                setPosition(animationDrawable);
                 //setTop(getSticker().getX());
                 //setLeft(getSticker().getY());
 
@@ -113,6 +102,27 @@ public class StickersView extends android.support.v7.widget.AppCompatImageView {
             e.printStackTrace();
         }
         return false;
+    }
+
+    private void setPosition(Object object) {
+        int actualWidth = getSticker().getWidth();
+        int actualHeight = getSticker().getHeight();
+
+        setScaleType(ScaleType.FIT_XY);
+
+        if (object instanceof AnimationDrawable)
+            setImageDrawable((AnimationDrawable) object);
+        else if (object instanceof Drawable)
+            setImageDrawable((Drawable) object);
+
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)getLayoutParams();
+        layoutParams.width = actualWidth;
+        layoutParams.height = actualHeight;
+        layoutParams.leftMargin = getSticker().getX();
+        layoutParams.topMargin = getSticker().getY();
+
+        Log.d("StickerView:", "anim width: " + layoutParams.width + " height: " + layoutParams.height);
+        setLayoutParams(layoutParams);
     }
 
     private int getDuration() {
