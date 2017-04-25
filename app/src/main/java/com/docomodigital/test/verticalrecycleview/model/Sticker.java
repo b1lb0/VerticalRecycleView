@@ -61,7 +61,11 @@ public class Sticker {
         });
 
         for (File file : files) {
-             if (file.getName().matches(".*.png")) {
+             if (file.getName().matches(".*000.png")) {
+//                    has_animation = false;
+                    drawable_file = file;
+//                    animation_frames_filenames.add(file);
+             } else if (file.getName().matches(".*.png")) {
                     has_animation = false;
                     if (drawable_file == null) {
                         drawable_file = file;
@@ -86,6 +90,14 @@ public class Sticker {
             Log.w(getClass().getSimpleName(), "collectInfo:: error during initialization!");
             throw new Exception("initialization error: is Bundle correct?");
         }
+    }
+
+    public Drawable getFirstDrawable()  {
+        return getResizedDrawable(drawable_file);
+    }
+
+    public File getDrawableFile() {
+        return drawable_file;
     }
 
     public String getLabel() {
