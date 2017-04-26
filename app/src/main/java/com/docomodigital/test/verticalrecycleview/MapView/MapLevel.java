@@ -1,8 +1,8 @@
-package com.docomodigital.test.verticalrecycleview;
+package com.docomodigital.test.verticalrecycleview.MapView;
 
 import android.graphics.drawable.Drawable;
 
-import com.docomodigital.test.verticalrecycleview.model.Sticker;
+import com.docomodigital.test.verticalrecycleview.MapView.model.Sticker;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class MapLevel {
     public int imageWidth;
     public Drawable placeholder;
 
-    MapLevel(String title, int imageId, int width, int height, List<Sticker> stickers) {
+    public MapLevel(String title, int imageId, int width, int height, List<Sticker> stickers) {
         this.title = title;
         this.imageId = imageId;
         this.imageWidth = width;

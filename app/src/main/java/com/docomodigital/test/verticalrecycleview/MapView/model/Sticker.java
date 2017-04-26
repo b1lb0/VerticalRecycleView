@@ -1,4 +1,4 @@
-package com.docomodigital.test.verticalrecycleview.model;
+package com.docomodigital.test.verticalrecycleview.MapView.model;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,7 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
-import com.docomodigital.test.verticalrecycleview.Utils;
+import com.docomodigital.test.verticalrecycleview.MapView.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.Comparator;
  */
 public class Sticker {
     //   final int FRAMEDURATION = Resources.getSystem().getInteger(R.integer.fps);
-    public final int FRAMEDURATION = 40;
+    public int FRAMEDURATION = 40;
     private final AnimationDrawable animation;
     public String label;
     public int width;
@@ -34,11 +34,12 @@ public class Sticker {
     private float scaleFactor = 1;
     private ThumbRect info_on_scene = new ThumbRect(); //position and size
 
-    public Sticker(String label, ThumbRect thumbRect, String path) throws Exception {
+    public Sticker(String label, ThumbRect thumbRect, String path, int millisec) throws Exception {
         this.label = label;
         this.info_on_scene = thumbRect;
         setBundleDirectory(path);
         animation = getAnimation();
+        FRAMEDURATION = millisec;
     }
 
     // this function parse the file tree of the sticker and collect all the information required to work

@@ -1,4 +1,4 @@
-package com.docomodigital.test.verticalrecycleview;
+package com.docomodigital.test.verticalrecycleview.MapView;
 
 
 import android.content.Context;
@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.RelativeLayout;
 
-import com.docomodigital.test.verticalrecycleview.model.Sticker;
+import com.docomodigital.test.verticalrecycleview.MapView.model.Sticker;
 
 public class StickersView extends android.support.v7.widget.AppCompatImageView {
     private Sticker data = null;

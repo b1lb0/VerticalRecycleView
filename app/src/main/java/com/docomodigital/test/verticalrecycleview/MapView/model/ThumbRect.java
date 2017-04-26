@@ -1,4 +1,4 @@
-package com.docomodigital.test.verticalrecycleview.model;
+package com.docomodigital.test.verticalrecycleview.MapView.model;
 
 /**
  * Created by matteo on 29/01/15.

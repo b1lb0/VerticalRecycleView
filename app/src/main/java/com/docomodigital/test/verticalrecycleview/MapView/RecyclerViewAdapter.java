@@ -1,4 +1,4 @@
-package com.docomodigital.test.verticalrecycleview;
+package com.docomodigital.test.verticalrecycleview.MapView;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -9,7 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.docomodigital.test.verticalrecycleview.model.Sticker;
+import com.docomodigital.test.verticalrecycleview.R;
+import com.docomodigital.test.verticalrecycleview.MapView.model.Sticker;
 
 import java.util.Collections;
 import java.util.List;
