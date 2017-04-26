@@ -127,6 +127,7 @@ public class Sticker {
     //-----
 
     private Drawable getResizedDrawable(File f) {
+        if (!f.exists()) return null;
         Bitmap originalBitmap = BitmapFactory.decodeFile(f.getPath());
         float resizedFactor = 2f * scaleFactor;
         //Log.i(getClass().getSimpleName(), "getResizedDrawable: density=" + density);
