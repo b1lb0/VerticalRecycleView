@@ -20,6 +20,7 @@ import java.util.Comparator;
 public class Sticker {
     //   final int FRAMEDURATION = Resources.getSystem().getInteger(R.integer.fps);
     public final int FRAMEDURATION = 40;
+    private final AnimationDrawable animation;
     public String label;
     public int width;
     public int height;
@@ -37,6 +38,7 @@ public class Sticker {
         this.label = label;
         this.info_on_scene = thumbRect;
         setBundleDirectory(path);
+        animation = getAnimation();
     }
 
     // this function parse the file tree of the sticker and collect all the information required to work
@@ -133,8 +135,10 @@ public class Sticker {
     }
 
     public AnimationDrawable getAnimation() {
-        if (gotAnimation()) {
-            AnimationDrawable animation = new AnimationDrawable();
+        if (hasAnimation()) {
+            if (animation != null) return animation;
+
+            AnimationDrawable animationFromFiles = new AnimationDrawable();
             Log.d(getClass().getSimpleName(), "getAnimation:: ready to load " + animation_frames_filenames.size() + " frames");
             int cont = 0;
             for (File file : animation_frames_filenames) {
@@ -143,10 +147,10 @@ public class Sticker {
                 cont++;
                 Log.d("Sticker:", getLabel() + " single frame " + cont + " width: " + d.getIntrinsicWidth() + " height: " + d.getIntrinsicHeight());
 
-                animation.addFrame(d, FRAMEDURATION);
+                animationFromFiles.addFrame(d, FRAMEDURATION);
             }
 
-            return animation;
+            return animationFromFiles;
         } else return null;
     }
 
@@ -160,7 +164,7 @@ public class Sticker {
         return getResizedDrawable(animation_frames_filenames.get(id));
     }
 
-    public boolean gotAnimation() throws NullPointerException {
+    public boolean hasAnimation() throws NullPointerException {
         if (bundleDirectory != null) {
             return has_animation;
         }

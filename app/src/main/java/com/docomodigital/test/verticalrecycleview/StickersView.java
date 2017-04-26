@@ -17,6 +17,7 @@ public class StickersView extends android.support.v7.widget.AppCompatImageView {
     private IStickerView iStickerView;
     private Handler mAnimationHandler;
     private Runnable mAnumationRunnable;
+    private AnimationDrawable animationDrawable;
 
     /**
      * @param context
@@ -67,13 +68,15 @@ public class StickersView extends android.support.v7.widget.AppCompatImageView {
 
     public boolean startAnimation(boolean loop, IStickerView callback) {
         try {
-            if (callback!=null) iStickerView = callback;
+            if (callback != null) iStickerView = callback;
 
-            AnimationDrawable animationDrawable = getSticker().getAnimation();
+            if (data.getAnimation() == null) return false;
 
-            if (animationDrawable.isRunning()) {
-                Log.w(getClass().getSimpleName(), "startAnimation: skipped because already running.");
-            } else {
+            animationDrawable = getSticker().getAnimation();
+
+            //if (animationDrawable.isRunning()) {
+            //    Log.w(getClass().getSimpleName(), "startAnimation: skipped because already running.");
+            //} else {
                 setPosition(animationDrawable);
                 //setTop(getSticker().getX());
                 //setLeft(getSticker().getY());
@@ -97,7 +100,7 @@ public class StickersView extends android.support.v7.widget.AppCompatImageView {
                 }
 
                 return true;
-            }
+            //}
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -115,7 +118,7 @@ public class StickersView extends android.support.v7.widget.AppCompatImageView {
         else if (object instanceof Drawable)
             setImageDrawable((Drawable) object);
 
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)getLayoutParams();
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) getLayoutParams();
         layoutParams.width = actualWidth;
         layoutParams.height = actualHeight;
         layoutParams.leftMargin = getSticker().getX();
@@ -135,8 +138,18 @@ public class StickersView extends android.support.v7.widget.AppCompatImageView {
         return iDuration;
     }
 
+    public void startDalyedAnimation() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startAnimation();
+            }
+        }, 100);
+    }
+
     public interface IStickerView {
         void onStickerAnimationEnd();
+
         void onStickerAnimationStarted();
     }
 

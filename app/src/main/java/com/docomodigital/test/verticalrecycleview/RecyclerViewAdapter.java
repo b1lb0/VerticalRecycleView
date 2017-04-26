@@ -3,7 +3,6 @@ package com.docomodigital.test.verticalrecycleview;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -58,10 +57,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
                     Bitmap bitmap = null;
                     Bitmap scaledBitmap = null;
                     try {
+                        int width = getFileWidth(position);
+
                         BitmapFactory.Options options = new BitmapFactory.Options();
                         options.inSampleSize = 1;
+                        options.outWidth = list.get(position).imageWidth;
+                        options.outHeight = list.get(position).imageHeight;
                         bitmap = BitmapFactory.decodeResource(context.getResources(), list.get(position).imageId, options);
                         if (isCancelled()) return null;
+                        if (width<=list.get(position).imageWidth) return bitmap;
                         scaledBitmap = Bitmap.createScaledBitmap(bitmap,list.get(position).imageWidth, list.get(position).imageHeight, false );
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -73,7 +77,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
                 @Override
                 protected void onPostExecute(Bitmap bitmap) {
                     if (!isCancelled())
-                        if (bitmap!=null) holder.imageView.setImageBitmap(bitmap);
+                        if (bitmap!=null){
+                            holder.imageView.setImageBitmap(bitmap);
+
+                        }
                 }
             };
 
@@ -93,21 +100,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
 
         if (list.get(position).stickersList != null)
-            holder.imageView.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    for (Sticker sticker : list.get(position).stickersList) {
-                        StickersView stickerview = new StickersView(context);
-                        holder.frameLayout.addView(stickerview);
-                        Rect rect = new Rect(0,0,1000,1000);
-                        stickerview.setSticker(sticker);
-                        stickerview.startAnimation();
+        for (Sticker sticker : list.get(position).stickersList) {
+            StickersView stickerview = new StickersView(context);
+            holder.frameLayout.addView(stickerview);
+            stickerview.setSticker(sticker);
+            stickerview.startDalyedAnimation();
+        }
+    }
 
-                    }
-                }
-            }, 10);
-
-
+    private int getFileWidth(int position) {
+        BitmapFactory.Options dimensions = new BitmapFactory.Options();
+        dimensions.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(context.getResources(), list.get(position).imageId, dimensions);
+        return dimensions.outWidth;
     }
 
     @Override
