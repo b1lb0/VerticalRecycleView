@@ -88,7 +88,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
             holder.imageView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (holder.async.getStatus() != AsyncTask.Status.RUNNING)
+                    if (holder.async.getStatus() != AsyncTask.Status.RUNNING && holder.async.getStatus() != AsyncTask.Status.FINISHED)
                         holder.async.execute();
                 }
             },10);

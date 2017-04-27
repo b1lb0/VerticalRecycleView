@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.docomodigital.test.verticalrecycleview.MapView.Utils;
@@ -20,7 +21,7 @@ import java.util.Comparator;
 public class Sticker {
     //   final int FRAMEDURATION = Resources.getSystem().getInteger(R.integer.fps);
     public int FRAMEDURATION = 40;
-    private final AnimationDrawable animation;
+    private AnimationDrawable animation;
     public String label;
     public int width;
     public int height;
@@ -37,9 +38,9 @@ public class Sticker {
     public Sticker(String label, ThumbRect thumbRect, String path, int millisec) throws Exception {
         this.label = label;
         this.info_on_scene = thumbRect;
-        setBundleDirectory(path);
-        animation = getAnimation();
         FRAMEDURATION = millisec;
+        setBundleDirectory(path);
+        getAnimation();
     }
 
     // this function parse the file tree of the sticker and collect all the information required to work
@@ -48,6 +49,7 @@ public class Sticker {
         animation_frames_filenames = new ArrayList<File>();
         //isMemoryOptimized = true;
 
+        long startTime = System.currentTimeMillis();
         //check directory..
         File stickerDirectory = getStickerDirectory();
         if ((stickerDirectory == null) || !stickerDirectory.exists() || !stickerDirectory.isDirectory()) {
@@ -93,6 +95,8 @@ public class Sticker {
             Log.w(getClass().getSimpleName(), "collectInfo:: error during initialization!");
             throw new Exception("initialization error: is Bundle correct?");
         }
+
+        Log.d("TIME read dir:", System.currentTimeMillis() - startTime + "msecs");
     }
 
     public Drawable getFirstDrawable()  {
@@ -128,7 +132,7 @@ public class Sticker {
     //-----
 
     private Drawable getResizedDrawable(File f) {
-        if (!f.exists()) return null;
+        if (f==null || !f.exists()) return null;
         Bitmap originalBitmap = BitmapFactory.decodeFile(f.getPath());
         float resizedFactor = 2f * scaleFactor;
         //Log.i(getClass().getSimpleName(), "getResizedDrawable: density=" + density);
@@ -137,23 +141,43 @@ public class Sticker {
     }
 
     public AnimationDrawable getAnimation() {
+        return getAnimation(true);
+    }
+
+    public AnimationDrawable getAnimation(boolean async) {
         if (hasAnimation()) {
             if (animation != null) return animation;
 
-            AnimationDrawable animationFromFiles = new AnimationDrawable();
-            Log.d(getClass().getSimpleName(), "getAnimation:: ready to load " + animation_frames_filenames.size() + " frames");
-            int cont = 0;
-            for (File file : animation_frames_filenames) {
-                Drawable d = getResizedDrawable(file);
+            if (async)
+            new AsyncTask<Object, Object, Object>() {
+                @Override
+                protected Object doInBackground(Object... params) {
+                    populateAnimationFromFile();
 
-                cont++;
-                Log.d("Sticker:", getLabel() + " single frame " + cont + " width: " + d.getIntrinsicWidth() + " height: " + d.getIntrinsicHeight());
+                    return null;
+                }
 
-                animationFromFiles.addFrame(d, FRAMEDURATION);
-            }
+            }.execute();
+            else populateAnimationFromFile();
 
-            return animationFromFiles;
-        } else return null;
+        }
+
+        return null;
+    }
+
+    private void populateAnimationFromFile() {
+        AnimationDrawable animationFromFiles = new AnimationDrawable();
+        Log.d(getClass().getSimpleName(), "getAnimation:: ready to load " + animation_frames_filenames.size() + " frames");
+        int cont = 0;
+        for (File file : animation_frames_filenames) {
+            Drawable d = getResizedDrawable(file);
+
+            cont++;
+            Log.d("Sticker:", getLabel() + " single frame " + cont + " width: " + d.getIntrinsicWidth() + " height: " + d.getIntrinsicHeight());
+
+            animationFromFiles.addFrame(d, FRAMEDURATION);
+        }
+        animation = animationFromFiles;
     }
 
     public Drawable getAnimationFrame() {

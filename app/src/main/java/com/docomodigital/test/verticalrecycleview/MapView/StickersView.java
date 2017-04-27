@@ -58,10 +58,6 @@ public class StickersView extends android.support.v7.widget.AppCompatImageView {
         setPosition(data.getFirstDrawable());
     }
 
-    public AnimationDrawable getAnimationDrawable() {
-        return this.getSticker().getAnimation();
-    }
-
     public boolean startAnimation() {
         return startAnimation(true, null);
     }
@@ -70,7 +66,9 @@ public class StickersView extends android.support.v7.widget.AppCompatImageView {
         try {
             if (callback != null) iStickerView = callback;
 
-            if (data.getAnimation() == null) return false;
+            if (data.getAnimation() == null) {
+                animationDrawable = data.getAnimation(false);
+            }
 
             animationDrawable = getSticker().getAnimation();
 
