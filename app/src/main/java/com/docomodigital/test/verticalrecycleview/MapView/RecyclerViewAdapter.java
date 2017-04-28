@@ -52,50 +52,51 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.frameLayout.removeAllViews();
 
         if (!isVector) {
-            holder.async = new AsyncTask<Object, Object, Bitmap>() {
-                @Override
-                protected Bitmap doInBackground(Object... params) {
-                    Bitmap bitmap = null;
-                    Bitmap scaledBitmap = null;
-                    try {
-                        int width = getFileWidth(position);
+            if (true) {
+                holder.async = new AsyncTask<Object, Object, Bitmap>() {
+                    @Override
+                    protected Bitmap doInBackground(Object... params) {
+                        Bitmap bitmap = null;
+                        Bitmap scaledBitmap = null;
+                        try {
+                            int width = getFileWidth(position);
 
-                        BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inSampleSize = 1;
-                        options.outWidth = list.get(position).imageWidth;
-                        options.outHeight = list.get(position).imageHeight;
-                        bitmap = BitmapFactory.decodeResource(context.getResources(), list.get(position).imageId, options);
-                        if (isCancelled()) return null;
-                        if (width<=list.get(position).imageWidth) return bitmap;
-                        scaledBitmap = Bitmap.createScaledBitmap(bitmap,list.get(position).imageWidth, list.get(position).imageHeight, false );
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                            BitmapFactory.Options options = new BitmapFactory.Options();
+                            options.inSampleSize = 2;
+                            options.outWidth = list.get(position).imageWidth;
+                            options.outHeight = list.get(position).imageHeight;
+                            bitmap = BitmapFactory.decodeResource(context.getResources(), list.get(position).imageId, options);
+                            if (isCancelled()) return null;
+                            if (width <= list.get(position).imageWidth) return bitmap;
+                            scaledBitmap = Bitmap.createScaledBitmap(bitmap, list.get(position).imageWidth, list.get(position).imageHeight, false);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        return scaledBitmap;
                     }
 
-                    return scaledBitmap;
-                }
+                    @Override
+                    protected void onPostExecute(Bitmap bitmap) {
+                        if (!isCancelled())
+                            if (bitmap != null) {
+                                holder.imageView.setImageBitmap(bitmap);
 
-                @Override
-                protected void onPostExecute(Bitmap bitmap) {
-                    if (!isCancelled())
-                        if (bitmap!=null){
-                            holder.imageView.setImageBitmap(bitmap);
+                            }
+                    }
+                };
 
-                        }
-                }
-            };
-
-            holder.imageView.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (holder.async.getStatus() != AsyncTask.Status.RUNNING && holder.async.getStatus() != AsyncTask.Status.FINISHED)
-                        holder.async.execute();
-                }
-            },10);
+                holder.imageView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (holder.async.getStatus() != AsyncTask.Status.RUNNING && holder.async.getStatus() != AsyncTask.Status.FINISHED)
+                            holder.async.execute();
+                    }
+                }, 100);
 
                 //holder.imageView.setImageResource(list.get(position).imageId);
 
-
+            }
         } else {
             holder.imageView.setImageResource(list.get(position).imageId);
         }
