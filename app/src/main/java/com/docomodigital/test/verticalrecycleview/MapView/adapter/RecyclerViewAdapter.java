@@ -1,12 +1,16 @@
 package com.docomodigital.test.verticalrecycleview.MapView.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.docomodigital.test.verticalrecycleview.MapView.view.AnimationView;
+import com.docomodigital.test.verticalrecycleview.MapView.model.Item;
 import com.docomodigital.test.verticalrecycleview.MapView.model.Map;
 import com.docomodigital.test.verticalrecycleview.R;
 
@@ -47,8 +51,59 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
         lp.height = list.get(position).imageHeight;
         holder.imageView.setLayoutParams(lp);
         holder.imageView.setImageDrawable(list.get(position).placeholder);
+        holder.frameLayout.removeAllViews();
 
-        holder.imageView.setImageBitmap(BitmapFactory.decodeResource(contextRef.get().getResources(), list.get(position).imageId, null));
+        if (!isVector) {
+            holder.async = new AsyncTask<Object, Object, Bitmap>() {
+                @Override
+                protected Bitmap doInBackground(Object... params) {
+                    Bitmap bitmap;
+                    Bitmap scaledBitmap = null;
+                    try {
+                        int width = getFileWidth(position);
+
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inSampleSize = 2;
+                        options.outWidth = list.get(position).imageWidth;
+                        options.outHeight = list.get(position).imageHeight;
+                        bitmap = BitmapFactory.decodeResource(contextRef.get().getResources(), list.get(position).imageId, options);
+                        if (isCancelled()) return null;
+                        if (width <= list.get(position).imageWidth) return bitmap;
+                        scaledBitmap = Bitmap.createScaledBitmap(bitmap, list.get(position).imageWidth, list.get(position).imageHeight, false);
+                        bitmap.recycle();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    return scaledBitmap;
+                }
+
+                @Override
+                protected void onPostExecute(Bitmap bitmap) {
+                    if (!isCancelled())
+                        if (bitmap != null) {
+                            holder.imageView.setImageBitmap(bitmap);
+
+                        }
+                }
+            };
+
+            holder.imageView.postDelayed(() -> {
+                if (holder.async.getStatus() != AsyncTask.Status.RUNNING && holder.async.getStatus() != AsyncTask.Status.FINISHED)
+                    holder.async.execute();
+            }, 1000);
+
+        } else {
+            holder.imageView.setImageResource(list.get(position).imageId);
+        }
+
+        if (list.get(position).stickersList != null)
+            for (Item item : list.get(position).stickersList) {
+                AnimationView stickerview = new AnimationView(contextRef.get());
+                holder.frameLayout.addView(stickerview);
+                stickerview.setItem(item);
+                stickerview.startDalyedAnimation();
+            }
     }
 
     private int getFileWidth(int position) {
