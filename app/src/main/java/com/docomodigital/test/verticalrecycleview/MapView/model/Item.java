@@ -1,5 +1,6 @@
 package com.docomodigital.test.verticalrecycleview.MapView.model;
 
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
@@ -77,7 +78,11 @@ public class Item {
         if (f == null || !f.exists()) return null;
         BitmapFactory.Options option = new BitmapFactory.Options();
         option.inSampleSize = 1;
-        return new BitmapDrawable(BitmapFactory.decodeFile(f.getPath(), option));
+        return new BitmapDrawable(getScaledBitmap(BitmapFactory.decodeFile(f.getPath(), option),0.5f));
+    }
+
+    private Bitmap getScaledBitmap(Bitmap bitmap, float scaleFactor) {
+        return bitmap;
     }
 
     public AnimationDrawable getAnimation() {
@@ -85,24 +90,22 @@ public class Item {
     }
 
     public AnimationDrawable getAnimation(boolean async) {
-        if (hasAnimation()) {
-            if (animation != null) return animation;
+        if (animation != null) return animation;
 
-            if (async)
-                new AsyncTask<Object, Object, Object>() {
-                    @Override
-                    protected Object doInBackground(Object... params) {
-                        readAnimationFromFile();
+        if (async)
+            new AsyncTask<Object, Object, Object>() {
+                @Override
+                protected Object doInBackground(Object... params) {
+                    readAnimationFromFile();
 
-                        return null;
-                    }
+                    return null;
+                }
 
-                }.execute();
-            else readAnimationFromFile();
+            }.execute();
+        else readAnimationFromFile();
 
-        }
 
-        return null;
+        return animation;
     }
 
     private void readAnimationFromFile() {

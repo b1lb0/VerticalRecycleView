@@ -61,8 +61,8 @@ public class AnimationView extends android.support.v7.widget.AppCompatImageView 
     public boolean startAnimation(boolean loop, IAnimationView callback) {
         AnimationDrawable animationDrawable = getItem().getAnimation();
 
-        if (getItem().getAnimation() == null) {
-            return false;
+        if (animationDrawable == null) {
+            animationDrawable = getItem().getAnimation(false);
         }
 
         setPosition(animationDrawable);

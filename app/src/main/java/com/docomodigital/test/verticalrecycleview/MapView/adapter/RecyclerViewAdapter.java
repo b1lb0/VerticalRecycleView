@@ -63,7 +63,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
                         int width = getFileWidth(position);
 
                         BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inSampleSize = 2;
+                        options.inSampleSize = 1;
                         options.outWidth = list.get(position).imageWidth;
                         options.outHeight = list.get(position).imageHeight;
                         bitmap = BitmapFactory.decodeResource(contextRef.get().getResources(), list.get(position).imageId, options);
@@ -91,7 +91,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
             holder.imageView.postDelayed(() -> {
                 if (holder.async.getStatus() != AsyncTask.Status.RUNNING && holder.async.getStatus() != AsyncTask.Status.FINISHED)
                     holder.async.execute();
-            }, 100);
+            }, 1000);
 
         } else {
             holder.imageView.setImageResource(list.get(position).imageId);
@@ -100,9 +100,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
         if (list.get(position).stickersList != null)
             for (Item item : list.get(position).stickersList) {
                 AnimationView stickerview = new AnimationView(contextRef.get());
-                stickerview.setItem(item);
-
                 holder.frameLayout.addView(stickerview);
+                stickerview.setItem(item);
                 stickerview.startDalyedAnimation();
             }
     }
