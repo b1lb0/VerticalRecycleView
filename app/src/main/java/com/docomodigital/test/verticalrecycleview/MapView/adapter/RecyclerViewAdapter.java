@@ -63,7 +63,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
                         int width = getFileWidth(position);
 
                         BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inSampleSize = 1;
+                        options.inSampleSize = 2;
                         options.outWidth = list.get(position).imageWidth;
                         options.outHeight = list.get(position).imageHeight;
                         bitmap = BitmapFactory.decodeResource(contextRef.get().getResources(), list.get(position).imageId, options);

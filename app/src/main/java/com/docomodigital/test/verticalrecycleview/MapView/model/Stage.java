@@ -52,7 +52,7 @@ public class Stage {
 
         try {
             //LEVEL 3
-            items.add(new Item("montgolfiere", new Position((int) (648 *scale), (int) (0*scale), (int) (547*scale), (int) (793*scale)), root_animation_dir, 40));
+            //items.add(new Item("montgolfiere", new Position((int) (648 *scale), (int) (0*scale), (int) (547*scale), (int) (793*scale)), root_animation_dir, 40));
             items.add(new Item("nuages", new Position((int) (180 *scale), (int) (630*scale), (int) (480*scale), (int) (250*scale)), root_animation_dir, 40));
             data.add(new Map("grade3", R.drawable.map3_0,(int)(1080*scale),(int)(1159*scale), items));
 
@@ -75,7 +75,7 @@ public class Stage {
             //LEVEL 2
             items = new ArrayList<>();
             items.add(new Item("flamand", new Position((int) (150*scale), (int) (10*scale), (int) (522*scale), (int) (1287*scale)), root_animation_dir, 40));
-            items.add(new Item("brume2", new Position((int) (-50*scale), (int) (1630*scale), (int) (1737*scale), (int) (162*scale)), root_animation_dir, 40));
+            //items.add(new Item("brume2", new Position((int) (-50*scale), (int) (1630*scale), (int) (1737*scale), (int) (162*scale)), root_animation_dir, 40));
             data.add(new Map("grade2", R.drawable.map2_0_1,(int)(1080*scale),(int)(1832*scale), items));
 
             items = new ArrayList<>();
@@ -83,7 +83,7 @@ public class Stage {
             data.add(new Map("grade2", R.drawable.map2_2,(int)(1080*scale),(int)(916*scale), items));
 
             items = new ArrayList<>();
-            items.add(new Item("brume1", new Position((int) (-50*scale), (int) (470*scale), (int) (1773*scale), (int) (232*scale)), root_animation_dir, 40));
+            //items.add(new Item("brume1", new Position((int) (-50*scale), (int) (470*scale), (int) (1773*scale), (int) (232*scale)), root_animation_dir, 40));
             data.add(new Map("grade2", R.drawable.map2_3,(int)(1080*scale),(int)(916*scale), items));
 
 
