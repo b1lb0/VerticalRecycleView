@@ -7,9 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.docomodigital.test.verticalrecycleview.MapView.model.Item;
 import com.docomodigital.test.verticalrecycleview.MapView.model.Map;
-import com.docomodigital.test.verticalrecycleview.MapView.view.AnimationView;
 import com.docomodigital.test.verticalrecycleview.R;
 
 import java.lang.ref.WeakReference;
@@ -49,18 +47,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
         lp.height = list.get(position).imageHeight;
         holder.imageView.setLayoutParams(lp);
         holder.imageView.setImageDrawable(list.get(position).placeholder);
-        holder.frameLayout.removeAllViews();
 
         holder.imageView.setImageBitmap(BitmapFactory.decodeResource(contextRef.get().getResources(), list.get(position).imageId, null));
-
-
-        if (list.get(position).stickersList != null)
-            for (Item item : list.get(position).stickersList) {
-                AnimationView stickerview = new AnimationView(contextRef.get());
-                holder.frameLayout.addView(stickerview);
-                stickerview.setItem(item);
-                stickerview.startDalyedAnimation();
-            }
     }
 
     private int getFileWidth(int position) {
