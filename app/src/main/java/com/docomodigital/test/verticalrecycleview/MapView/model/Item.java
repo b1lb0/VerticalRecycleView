@@ -76,9 +76,7 @@ public class Item {
 
     private Drawable getResizedDrawable(File f) {
         if (f == null || !f.exists()) return null;
-        BitmapFactory.Options option = new BitmapFactory.Options();
-        option.inSampleSize = 2;
-        return new BitmapDrawable((BitmapFactory.decodeFile(f.getPath(), option)));
+        return new BitmapDrawable((BitmapFactory.decodeFile(f.getPath())));
     }
 
     private Bitmap getScaledBitmap(Bitmap bitmap, float scaleFactor) {
